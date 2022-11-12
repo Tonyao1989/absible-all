@@ -1,0 +1,6 @@
+---
+- name: redis
+  hosts: redis_uat
+  #remote_user: root
+  roles:
+    - role: redis

@@ -1,0 +1,4 @@
+pkgname: jdk1.8.tar.gz
+dirname: java
+envfile: bash_profile
+javadir: jdk1.8.0_71

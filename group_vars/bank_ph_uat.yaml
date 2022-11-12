@@ -1,0 +1,32 @@
+---
+#apt proxy 目录
+apt_path: /etc/apt
+#docker 下载
+docker_url: https://download.docker.com/linux
+#ops 代理地址
+proxy_address: http://10.163.55.205:3128
+#habor地址
+harbor_url: harbor-ph.seabank.io
+#设置docker proxy
+docker_proxypath: /etc/systemd/system/docker.service.d
+#设置docker data 目录
+docker_datapath: /data/var/lib/docker
+#docker service 修改
+docker_servicepath: /lib/systemd/system/docker.service
+
+#canal path
+canal_path: /opt/canal
+
+#canal-admin
+canal_admin: run-1.15_admin.sh
+canal_admin_port: 8089
+canal_server: run-1.15.sh
+canal_db: xxx:6606
+canal_user: cs_xxx
+canal_passwd: xxxx
+canal_cluster: bank-canal-cluster
+#uat host
+bank_ph_uat:
+  - 10.163.53.88
+  - 10.163.53.89
+  - 10.163.53.90

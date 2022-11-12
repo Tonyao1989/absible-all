@@ -1,0 +1,30 @@
+--- 
+- name: 7.1check canal-docker
+  shell: echo "test"
+#  shell:  docker rm  -f {{ canal_admin }}  {{ canal_server }}
+  tags:
+    - never
+    - canal-uninstall
+
+- name: 7.2 check canal-docker
+  shell:  (docker ps -aq -f "name=canal-admin" &&   docker ps -aq -f "name=canal-server")
+  register: result 
+  tags:
+    - never 
+    - canal-uninstall
+
+- name: 7.3 check canal-docker uninstall success
+  debug:
+    msg: "canal-docker uninstall success"
+  when: result.stdout == "" 
+  tags:
+    - canal-uninstall_check
+    - never
+
+- name: 7.4 check canal-docker uninstall failed
+  debug:
+    msg: "canal-docker uninstall failed"
+  when: result.stdout != "" 
+  tags:
+    - canal-uninstall_check
+    - never

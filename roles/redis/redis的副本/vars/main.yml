@@ -1,0 +1,8 @@
+port0: 7000
+port1: 7001
+port2: 7002
+port3: 7003
+port4: 7004
+port5: 7005
+dirname: redis
+pkgname: redis-3.2.0.tar.gz 

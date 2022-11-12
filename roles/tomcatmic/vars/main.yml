@@ -1,0 +1,6 @@
+port1: 8899
+dirname: /app/opsdesk
+pkgname: apache-tomcat-8.5.66.tar.gz
+pkgpath: apache-tomcat-8.5.66
+Jdkpath: /usr/jdk1.8.0_221
+CATALANAHOME: /app/opsdesk/apache-tomcat-8.5.66

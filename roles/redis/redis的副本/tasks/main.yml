@@ -1,0 +1,34 @@
+- name: 1.mkdir dirct
+  file: path=/usr/{{ dirname }} state=directory
+  tags: install
+- name: 2.copy redis file
+  copy: src={{ pkgname }} dest=/usr/{{ dirname }} 
+  tags: install  
+- name: 3.解压文件
+  unarchive: src={{ pkgname }} dest=/usr/{{ dirname }}  
+  ignore_errors: yes
+  tags: install  
+- name: 4.install redis
+  shell: cd /usr/redis/redis-3.2.0 && make && make PREFIX=/usr/redis/redis-3.2.0 install
+  tags: install  
+- name: 5.创建数据/日志/PID存放目录
+  shell: mkdir /usr/redis/redis-cluster/log -p && mkdir /usr/redis/redis-cluster/conf -p &&  mkdir /usr/redis/redis-cluster/data  -p
+  tags: install  
+- name: 6.1拷贝conf1文件  
+  template: src=redis1.conf.j2 dest=/usr/redis/redis-cluster/conf/redis1.conf 
+  tags: install  
+- name: start1  
+  shell: ps -ef |grep redis | grep -v grep |grep {{ port0 }} | awk '{print $2}' | xargs  kill -9 || /usr/redis/redis-3.2.0/bin/redis-server /usr/redis/redis-cluster/conf/redis1.conf 
+  tags: install  
+- name: 6.2拷贝conf2文件  
+  template: src=redis2.conf.j2 dest=/usr/redis/redis-cluster/conf/redis2.conf 
+  tags: install
+- name: start2  
+  shell: ps -ef |grep redis | grep -v grep |grep {{ port1 }} | awk '{print $2}' | xargs  kill -9 || /usr/redis/redis-3.2.0/bin/redis-server /usr/redis/redis-cluster/conf/redis2.conf  
+  tags: install  
+- name: 6.3拷贝conf3文件  
+  template: src=redis3.conf.j2 dest=/usr/redis/redis-cluster/conf/redis3.conf  
+  tags: install  
+- name: start3  
+  shell: ps -ef |grep redis | grep -v grep |grep {{ port2 }} | awk '{print $2}' | xargs  kill -9 || /usr/redis/redis-3.2.0/bin/redis-server /usr/redis/redis-cluster/conf/redis3.conf
+  tags: install

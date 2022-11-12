@@ -1,0 +1,5 @@
+- include: mkdir_files.yml
+- include: copy.yml
+- include: tar_files.yml
+- include: set_envs.yml
+- include: check.yml

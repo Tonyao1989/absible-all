@@ -1,0 +1,3 @@
+- name: 3.解压文件
+  unarchive: src={{ pkgname }} dest=/usr/{{ dirname }}
+  ignore_errors: yes

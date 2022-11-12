@@ -1,0 +1,24 @@
+- name: 1.mkdir dirct
+  file: path={{ dirname }} state=directory
+  ignore_errors: true 
+  tags: install
+- name: 2.copy redis file
+  copy: src={{ pkgname }} dest={{ dirname }} 
+  tags: install  
+- name: 3.解压文件&install tomcat8
+  unarchive: src={{ pkgname }} dest={{ dirname }}  
+  ignore_errors: yes
+  tags: install   
+- name: 5.拷贝conf1文件  
+  template: src=server.xml.j2 dest={{ dirname }}/{{ pkgpath }}/conf/server.xml 
+  tags: install 
+- name: 6.拷贝setclasspath.sh文件  
+  template: src=setclasspath.sh.j2 dest={{ dirname }}/{{ pkgpath }}/bin/setclasspath.sh
+  tags: install   
+- name: 7.start1  
+  shell: nohup {{ dirname }}/{{ pkgpath }}/bin/startup.sh &
+  tags: ['install','start']
+
+- name: 8.stop  
+  shell: nohup {{ dirname }}/{{ pkgpath }}/bin/shutdown.sh &
+  tags: ['uninstall','stop']   

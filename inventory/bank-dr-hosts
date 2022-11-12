@@ -1,0 +1,2 @@
+[bank_id_dr_31]
+10.162.146.31 ansible_ssh_user='TOCSre' ansible_become=yes

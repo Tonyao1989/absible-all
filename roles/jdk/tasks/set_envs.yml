@@ -1,0 +1,8 @@
+- name: set JAVA_HOME
+  lineinfile: dest=~/.bash_profile regexp="^JAVA_HOME=" line="JAVA_HOME=/usr/java/{{ javadir }}"
+- name: set CLASS_PATH
+  lineinfile: dest=~/.bash_profile regexp="^CLASS_PATH=" line="CLASS_PATH=$JAVA_HOME/lib:$JAVA_HOME/jre/lib"
+- name: set  PATH
+  lineinfile: dest=~/.bash_profile regexp="^PATH=\$PATH:\$JAVA_HOME" line="PATH=$PATH:$JAVA_HOME/bin"
+- name: set export JAVA_HOME
+  lineinfile: dest=~/.bash_profile regexp="^export JAVA_HOME" line="export JAVA_HOME"

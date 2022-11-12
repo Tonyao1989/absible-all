@@ -1,0 +1,11 @@
+[bank_ph_uat]
+10.163.53.88
+10.163.53.89
+10.163.53.90
+
+[bank_ph_uat_90]
+10.163.53.90
+
+
+[bank_ph_uat:children]
+bank_ph_uat_90

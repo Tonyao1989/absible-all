@@ -1,0 +1,20 @@
+##端口7000,7001,7002
+port {{ port0 }}
+#默认ip为127.0.0.1 需要改为其他节点机器可访问的ip
+bind {{ ansible_default_ipv4['address'] }}     
+#redis后台运行
+daemonize    yes
+#数据目录
+dir /opt/redis/redis-cluster/data
+#pidfile文件对应7000,7001,7002
+pidfile  /opt/redis/redis-cluster/redis_{{ port0 }}.pid
+#日志目录
+logfile /opt/redis/redis-cluster/log/redis-{{ port0 }}.log    
+#开启集群  把注释#去掉
+cluster-enabled  yes
+#集群的配置  配置文件首次启动自动生成 7000,7001,7002 把注释#去掉 
+cluster-config-file  nodes_{{ port0 }}.conf
+#请求超时  默认15秒，可自行设置 把注释#去掉 
+cluster-node-timeout  15000           
+# of日志开启  有需要就开启，它会每次写操作都记录一条日志
+appendonly  yes                      

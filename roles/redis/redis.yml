@@ -1,0 +1,6 @@
+ ---
+- hosts: redis_uat
+  become: true #sudo 权限创建
+  #remote_user: root
+  roles:
+    - role: redis 

@@ -1,0 +1,4 @@
+- name: 6.check java_home
+  shell: source ~/.bash_profile
+- name: 7.java version
+  shell: java -version  

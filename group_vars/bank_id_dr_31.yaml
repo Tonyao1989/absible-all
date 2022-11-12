@@ -1,0 +1,7 @@
+apt_path: /etc/apt
+docker_url: https://download.docker.com/linux
+proxy_address: 10.162.134.103:3128
+bank_id_dr:
+  - 10.162.146.31
+  - 10.162.146.32
+  - 10.162.146.33

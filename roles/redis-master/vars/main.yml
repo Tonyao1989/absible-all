@@ -1,0 +1,12 @@
+port0: 7000
+port1: 7001
+port2: 7002
+port3: 7003
+port4: 7004
+port5: 7005
+ip1: 192.168.232.130
+ip2: 192.168.232.131
+dirname: redis
+rubypkgname: ruby-2.3.1.tar.gz
+rubyversion: ruby-2.3.1
+rubygems: redis-3.2.0.gem

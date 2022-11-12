@@ -1,0 +1,94 @@
+---
+- name: 1.network check
+  shell: curl  -w "%{http_code}"  -m 3 "{{ docker_url }}"  -o /dev/null
+  register: health_check
+  ignore_errors: true
+  tags:
+    - set_apt_prxoy 
+    - docker-install
+
+- name: 1.2show result
+  debug: var=health_check verbosity=0
+  tags:
+    - set_apt_prxoy
+    - docker-install    
+
+- name: 2.set apt proxy config
+  template:
+    src: "apt.conf.j2"
+    dest: "{{ apt_path }}/apt.conf"
+    force: yes
+  when: health_check.rc!=0 
+  tags:
+    - set_apt_prxoy
+    - docker-install
+
+- name: 3.docker update
+  shell: apt-get update
+  tags:
+    - docker-update
+    - docker-install
+
+- name: 4.docker install ca-certificates
+  shell: apt-get install ca-certificates curl gnupg lsb-release  -y
+  tags:
+    - docker-install  
+
+- name: 5.docker gpg
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg --proxy "{{proxy_address}}" | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  tags:
+    - docker-gpg
+    - docker-install 
+
+- name: 6.docker install deb
+  shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  tags:
+    - docker-install 
+
+- name: 7.docker chmod
+  shell: chmod a+r /usr/share/keyrings/docker-archive-keyring.gpg
+  tags:
+    - docker-install 
+
+- name: 8.docker-ce install
+  #shell: apt-get install docker-ce docker-ce-cli containerd.io docker-compose -y
+  shell: apt-get install docker-compose -y
+  tags:
+    - docker-install-all     
+
+- name: 9.docker-check
+  #shell: apt-get install docker-ce docker-ce-cli containerd.io docker-compose -y
+  shell: docker-compose -v
+  tags:
+    - docker-install       
+    - docker-check 
+
+- name: 10.docker proxyconfig
+  template:
+    src: "http-proxy.conf.j2"
+    dest: "{{ docker_proxypath }}/http-proxy.conf"
+    force: yes
+  tags:
+    - docker-proxyconfig
+    - docker-install
+
+- name: 11.docker-data document create 
+  file:
+    path: "{{ docker_datapath }}"
+    state: directory
+    mode: 755
+  tags:
+    - docker-createdoc
+    - docker-install    
+
+- name: 12.docker-service  modify config     
+  shell: sed -i 's#ExecStart.*$#&\ --data-root\={{docker_datapath}}#' {{docker_servicepath}}
+  tags:
+    - docker-install
+    - docker-modifyconfig 
+
+# - name: 13.docker restart     
+#   shell: systemctl  daemon-reload && systemctl  restart docker
+#   tags:
+#     - docker-install
+#     - docker-restart       

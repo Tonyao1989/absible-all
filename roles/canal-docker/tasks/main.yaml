@@ -1,0 +1,56 @@
+--- 
+- name: 1. script copy script
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 755
+    force: yes
+  with_items: 
+    - { src: '{{canal_admin}}',dest: '{{ canal_path }}/{{ canal_admin }}' }
+    - { src: '{{canal_server}}',dest: '{{ canal_path }}/{{ canal_server }}' }
+    # - { src: 'run-1.15_admin.sh',dest: '/opt/canal/run-1.15_admin.sh' }
+    # - { src: 'run-1.15.sh',dest: '/opt/canal/run-1.15.sh' }    
+  tags:
+    - canalscript-copy
+    - canal-install
+
+- name: 2.canal_admin install 
+  shell:  bash  {{ canal_path }}/{{ canal_admin }}  -e server.port={{canal_admin_port}} -e spring.datasource.address={{canal_db}} -e spring.datasource.database=canal_manager   -e spring.datasource.username={{ canal_user }}  -e spring.datasource.password={{canal_passwd}}
+  tags:
+    - canal_admin-install
+    - canal-install    
+
+- name: 3.canal_server install 
+  shell: bash {{ canal_path }}/{{ canal_server }}  -e canal.register.ip={{ inventory_hostname }} -e canal.admin.manager={{ inventory_hostname }}:{{canal_admin_port}} -e canal.admin.port=11110 -e canal.admin.user=admin -e canal.admin.passwd=4ACFE3202A5FF5CF467898FC58AAB1D615029441 -e canal.admin.register.name={{ inventory_hostname }} -e canal.admin.register.cluster={{canal_cluster}}
+  tags:
+    - canal_server-install
+    - canal-install
+
+- name: 4.check canal-docker
+  shell:  (docker ps -sq -f "name=canal-admin" &&   docker ps -sq -f "name=canal-server")
+  register: result 
+  tags:
+    - canal_check
+    - canal-install
+
+- name: 5.check canal-docker failed
+  debug:
+    msg: "canal-docker start failed"
+  when: result.stdout == "" 
+  tags:
+    - canal_check
+    - canal-install
+
+- name: 6.check canal-docker success
+  debug:
+    msg: "canal-docker start success"
+  when: result.stdout != "" 
+  tags:
+    - canal_check
+    - canal-install
+
+- name: 7.uninstall
+  include: uninstall-canal.yaml
+  tags:
+    - never
+    - canal-uninstall

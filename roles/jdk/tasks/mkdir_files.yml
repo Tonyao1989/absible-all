@@ -1,0 +1,3 @@
+- name: 1.creat files
+  file: path=/usr/{{ dirname }} state=directory
+  

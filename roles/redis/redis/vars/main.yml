@@ -1,0 +1,8 @@
+port0: 6001
+port1: 6002
+port2: 6003
+port3: 6004
+port4: 6005
+port5: 6006
+dirname: redis
+pkgname: redis-5.0.9.tar.gz 

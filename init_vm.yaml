@@ -1,0 +1,6 @@
+---
+- hosts: bank_ph_uat_90
+  gather_facts: no
+  serial: 1
+  roles:
+    - init_vm

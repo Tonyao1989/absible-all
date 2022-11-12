@@ -1,0 +1,33 @@
+- name: 1.mkdir dirct
+  file: path=/usr/{{ dirname }} state=directory
+  tags: setcluster
+- name: 2.copy redis file
+  copy: src={{ rubypkgname }} dest=/usr/{{ dirname }} 
+  tags: setcluster  
+- name: 3.解压文件rubypkg
+  unarchive: src={{ rubypkgname }} dest=/usr/{{ dirname }}  
+  ignore_errors: yes
+  tags: setcluster  
+- name: 4install ruby
+  shell: cd /usr/redis/{{ rubyversion }} && ./configure && make && make install
+  tags: setcluster    
+- name: 5.copy rubygems file
+  copy: src={{ rubygems }} dest=/usr/{{ dirname }} 
+  tags: setcluster 
+- name: 6.gem install # yum insatll  zlib -y
+  shell: cd /usr/redis/ &&  gem install -l {{ rubygems }} 
+  ignore_errors: yes  
+  tags: setcluster  
+- name: 7.set rubygems  
+  shell: gem list | grep redis
+  register: info
+  ignore_errors: yes  
+  tags: setcluster
+- name: 8.show message  failed 
+  debug: msg="请检查master服务器gem"
+  when: info | failed #存在返回 succeeded, 失败就是 failed.
+  tags: setcluster   
+- name: 8.show message  succeeded
+  debug: msg="请在master服务器上执行:/usr/{{ dirname }}/redis-3.2.0/src/redis-trib.rb  create  --replicas  1   {{ ip1 }}:{{ port0 }}  {{ ip1 }}:{{ port1 }}  {{ ip1 }}:{{ port2 }}   {{ ip2 }}:{{ port0 }}   {{ ip2 }}:{{ port1 }} {{ ip2 }}:{{ port2 }} "
+  when: info | succeeded #存在返回 succeeded, 失败就是 failed.
+  tags: setcluster   
